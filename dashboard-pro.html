@@ -1,0 +1,2714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Pro | PremiumShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --dark-bg: #0a0a0a;
+            --sidebar-bg: #121212;
+            --card-bg: #1e1e1e;
+            --light-text: #ffffff;
+            --accent-color: #667eea;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--light-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: var(--sidebar-bg);
+            padding: 25px 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo i {
+            font-size: 30px;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius);
+        }
+
+        .admin-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .admin-details h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .admin-details p {
+            font-size: 13px;
+            color: #b0b0b0;
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            color: #b0b0b0;
+            text-decoration: none;
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: var(--secondary-gradient);
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            color: #ef4444;
+            text-decoration: none;
+            border-radius: var(--radius);
+            margin-top: auto;
+            transition: var(--transition);
+            background: rgba(239, 68, 68, 0.1);
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-card:nth-child(1) .stat-icon {
+            background: linear-gradient(135deg, #667eea 0%, rgba(102, 126, 234, 0.2) 100%);
+            color: #667eea;
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: linear-gradient(135deg, #10b981 0%, rgba(16, 185, 129, 0.2) 100%);
+            color: #10b981;
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: linear-gradient(135deg, #f59e0b 0%, rgba(245, 158, 11, 0.2) 100%);
+            color: #f59e0b;
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            background: linear-gradient(135deg, #f5576c 0%, rgba(245, 87, 108, 0.2) 100%);
+            color: #f5576c;
+        }
+
+        .stat-info h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 35px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            color: var(--accent-color);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        /* Forms */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #d1d1d1;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 16px 30px;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .table th {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: #b0b0b0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+        }
+
+        .table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning-color);
+        }
+
+        .status-blocked {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error-color);
+        }
+
+        .status-completed {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--info-color);
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Image Preview */
+        .image-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b0b0b0;
+            font-size: 12px;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            color: #b0b0b0;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            color: white;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary-gradient);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Search and Filter */
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 14px;
+        }
+
+        .filter-select {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .page-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .page-btn.active {
+            background: var(--primary-gradient);
+            border-color: var(--accent-color);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+                padding: 25px 15px;
+            }
+            
+            .logo span, .admin-details, .nav-item span, .logout-btn span {
+                display: none;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .admin-info {
+                justify-content: center;
+                padding: 10px;
+            }
+            
+            .nav-item, .logout-btn {
+                justify-content: center;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+                margin-left: 0;
+            }
+            
+            .sidebar {
+                left: -280px;
+            }
+            
+            .sidebar.active {
+                left: 0;
+                width: 280px;
+            }
+            
+            .logo span, .admin-details, .nav-item span, .logout-btn span {
+                display: block;
+            }
+            
+            .logo {
+                justify-content: flex-start;
+            }
+            
+            .admin-info {
+                justify-content: flex-start;
+            }
+            
+            .nav-item, .logout-btn {
+                justify-content: flex-start;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .dashboard-section {
+                padding: 25px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                padding: 14px 20px;
+                font-size: 14px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .modal-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" style="position: fixed; top: 15px; left: 15px; z-index: 99; display: none;">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <i class="fas fa-crown"></i>
+            <span>PremiumShop Pro</span>
+        </div>
+        
+        <div class="admin-info">
+            <div class="admin-avatar" id="adminAvatar">A</div>
+            <div class="admin-details">
+                <h3 id="adminName">Admin</h3>
+                <p>Super Administrator</p>
+            </div>
+        </div>
+        
+        <div class="nav-menu">
+            <div class="nav-item active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </div>
+            
+            <div class="nav-item" data-section="products">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+                <span class="badge" id="productsBadge">0</span>
+            </div>
+            
+            <div class="nav-item" data-section="orders">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+                <span class="badge" id="ordersBadge">0</span>
+            </div>
+            
+            <div class="nav-item" data-section="users">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+                <span class="badge" id="usersBadge">0</span>
+            </div>
+            
+            <div class="nav-item" data-section="categories">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </div>
+            
+            <div class="nav-item" data-section="analytics">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </div>
+            
+            <div class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+        
+        <div class="logout-btn" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Dashboard Section -->
+        <div class="dashboard-section active" id="dashboardSection">
+            <div class="header">
+                <h1>Dashboard Overview</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="refreshBtn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-primary" onclick="window.open('index.html', '_blank')">
+                        <i class="fas fa-store"></i> View Store
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card" onclick="loadSection('products')">
+                    <div class="stat-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalProducts">0</h3>
+                        <p>Total Products</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card" onclick="loadSection('orders')">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalOrders">0</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card" onclick="loadSection('users')">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-rupee-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">₹0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Orders -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-history"></i>
+                        Recent Orders
+                    </h2>
+                    <button class="btn btn-secondary btn-sm" onclick="loadSection('orders')">
+                        View All
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table" id="recentOrdersTable">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentOrdersBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 40px;">
+                                    <div class="loader" style="margin: 0 auto 15px;"></div>
+                                    <p>Loading recent orders...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Low Stock Products -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Low Stock Products
+                    </h2>
+                    <button class="btn btn-warning btn-sm" onclick="loadSection('products')">
+                        Manage Stock
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table" id="lowStockTable">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Stock</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lowStockBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 40px;">
+                                    <p>No low stock products</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Products Section -->
+        <div class="dashboard-section" id="productsSection">
+            <div class="header">
+                <h1>Products Management</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="addProductBtn">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search and Filter -->
+            <div class="search-box">
+                <input type="text" class="search-input" id="productSearch" placeholder="Search products...">
+                <select class="filter-select" id="categoryFilter">
+                    <option value="">All Categories</option>
+                </select>
+                <select class="filter-select" id="stockFilter">
+                    <option value="">All Stock</option>
+                    <option value="low">Low Stock</option>
+                    <option value="out">Out of Stock</option>
+                </select>
+            </div>
+            
+            <!-- Products Table -->
+            <div class="table-container">
+                <table class="table" id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Category</th>
+                            <th>Featured</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px;">
+                                <div class="loader" style="margin: 0 auto 15px;"></div>
+                                <p>Loading products...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination" id="productsPagination">
+                <button class="page-btn" id="prevPage">Previous</button>
+                <span id="pageInfo">Page 1 of 1</span>
+                <button class="page-btn" id="nextPage">Next</button>
+            </div>
+        </div>
+        
+        <!-- Orders Section -->
+        <div class="dashboard-section" id="ordersSection">
+            <div class="header">
+                <h1>Orders Management</h1>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="all">All Orders</button>
+                <button class="tab" data-tab="pending">Pending</button>
+                <button class="tab" data-tab="processing">Processing</button>
+                <button class="tab" data-tab="completed">Completed</button>
+                <button class="tab" data-tab="cancelled">Cancelled</button>
+            </div>
+            
+            <!-- Search -->
+            <div class="search-box">
+                <input type="text" class="search-input" id="orderSearch" placeholder="Search orders...">
+                <input type="date" class="filter-select" id="orderDate">
+            </div>
+            
+            <!-- Orders Table -->
+            <div class="tab-content active" id="allOrdersTab">
+                <div class="table-container">
+                    <table class="table" id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Orders will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination" id="ordersPagination">
+                <button class="page-btn" id="ordersPrevPage">Previous</button>
+                <span id="ordersPageInfo">Page 1 of 1</span>
+                <button class="page-btn" id="ordersNextPage">Next</button>
+            </div>
+        </div>
+        
+        <!-- Users Section -->
+        <div class="dashboard-section" id="usersSection">
+            <div class="header">
+                <h1>Users Management</h1>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="allUsers">All Users</button>
+                <button class="tab" data-tab="active">Active</button>
+                <button class="tab" data-tab="blocked">Blocked</button>
+            </div>
+            
+            <!-- Search -->
+            <div class="search-box">
+                <input type="text" class="search-input" id="userSearch" placeholder="Search users...">
+                <input type="date" class="filter-select" id="userDate">
+            </div>
+            
+            <!-- Users Table -->
+            <div class="tab-content active" id="allUsersTab">
+                <div class="table-container">
+                    <table class="table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Orders</th>
+                                <th>Spent</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination" id="usersPagination">
+                <button class="page-btn" id="usersPrevPage">Previous</button>
+                <span id="usersPageInfo">Page 1 of 1</span>
+                <button class="page-btn" id="usersNextPage">Next</button>
+            </div>
+        </div>
+        
+        <!-- Categories Section -->
+        <div class="dashboard-section" id="categoriesSection">
+            <div class="header">
+                <h1>Categories Management</h1>
+                <button class="btn btn-primary" id="addCategoryBtn">
+                    <i class="fas fa-plus"></i> Add Category
+                </button>
+            </div>
+            
+            <!-- Categories Table -->
+            <div class="table-container">
+                <table class="table" id="categoriesTable">
+                    <thead>
+                        <tr>
+                            <th>Category Name</th>
+                            <th>Description</th>
+                            <th>Products</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoriesTableBody">
+                        <!-- Categories will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Analytics Section -->
+        <div class="dashboard-section" id="analyticsSection">
+            <div class="header">
+                <h1>Sales Analytics</h1>
+                <select class="filter-select" id="analyticsPeriod">
+                    <option value="7">Last 7 Days</option>
+                    <option value="30" selected>Last 30 Days</option>
+                    <option value="90">Last 90 Days</option>
+                    <option value="365">Last Year</option>
+                </select>
+            </div>
+            
+            <!-- Analytics Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="salesCount">0</h3>
+                        <p>Total Sales</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="revenueCount">₹0</h3>
+                        <p>Revenue</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="newUsersCount">0</h3>
+                        <p>New Users</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="conversionRate">0%</h3>
+                        <p>Conversion Rate</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts will be implemented here -->
+            <div style="text-align: center; padding: 40px; color: #b0b0b0;">
+                <i class="fas fa-chart-bar" style="font-size: 60px; margin-bottom: 20px; opacity: 0.5;"></i>
+                <p>Charts and graphs will be displayed here</p>
+                <p style="font-size: 14px; margin-top: 10px;">Advanced analytics coming soon</p>
+            </div>
+        </div>
+        
+        <!-- Settings Section -->
+        <div class="dashboard-section" id="settingsSection">
+            <div class="header">
+                <h1>Settings</h1>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="general">General</button>
+                <button class="tab" data-tab="payment">Payment</button>
+                <button class="tab" data-tab="shipping">Shipping</button>
+                <button class="tab" data-tab="notifications">Notifications</button>
+            </div>
+            
+            <!-- General Settings -->
+            <div class="tab-content active" id="generalTab">
+                <div class="form-group">
+                    <label>Store Name</label>
+                    <input type="text" class="form-control" id="storeName" value="PremiumShop">
+                </div>
+                
+                <div class="form-group">
+                    <label>Store Email</label>
+                    <input type="email" class="form-control" id="storeEmail" value="info@premiumshop.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Store Phone</label>
+                    <input type="text" class="form-control" id="storePhone" value="+91 98765 43210">
+                </div>
+                
+                <div class="form-group">
+                    <label>Store Address</label>
+                    <textarea class="form-control" id="storeAddress" rows="3">123 Luxury Street, Mumbai, India</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Store Currency</label>
+                    <select class="form-control" id="storeCurrency">
+                        <option value="INR" selected>Indian Rupee (₹)</option>
+                        <option value="USD">US Dollar ($)</option>
+                        <option value="EUR">Euro (€)</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" id="saveSettings">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Product Modal -->
+    <div class="modal-overlay" id="addProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Product</h3>
+                <button class="close-modal" id="closeProductModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addProductForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Product Name *</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select class="form-control" id="productCategory" required>
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price (₹) *</label>
+                            <input type="number" class="form-control" id="productPrice" required min="1">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Discount (%)</label>
+                            <input type="number" class="form-control" id="productDiscount" min="0" max="100" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Stock Quantity *</label>
+                            <input type="number" class="form-control" id="productStock" required min="0" value="10">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Featured Product</label>
+                            <select class="form-control" id="productFeatured">
+                                <option value="false">No</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="text" class="form-control" id="productImage" placeholder="https://example.com/image.jpg">
+                        <small style="color: #b0b0b0; font-size: 12px;">Leave empty to use default image</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="productDescription" rows="4" placeholder="Product description..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>SKU (Stock Keeping Unit)</label>
+                        <input type="text" class="form-control" id="productSKU" placeholder="SKU001">
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 30px;">
+                        <button type="button" class="btn btn-secondary" id="cancelAddProduct" style="flex: 1;">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="saveProductBtn" style="flex: 2;">
+                            <span id="saveProductBtnText">Save Product</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Product Modal -->
+    <div class="modal-overlay" id="editProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Product</h3>
+                <button class="close-modal" id="closeEditProductModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Details Modal -->
+    <div class="modal-overlay" id="orderDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Order Details</h3>
+                <button class="close-modal" id="closeOrderDetailsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Details Modal -->
+    <div class="modal-overlay" id="userDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>User Details</h3>
+                <button class="close-modal" id="closeUserDetailsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Category Modal -->
+    <div class="modal-overlay" id="addCategoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Category</h3>
+                <button class="close-modal" id="closeCategoryModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addCategoryForm">
+                    <div class="form-group">
+                        <label>Category Name *</label>
+                        <input type="text" class="form-control" id="categoryName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="categoryDescription" rows="3"></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 30px;">
+                        <button type="button" class="btn btn-secondary" id="cancelAddCategory" style="flex: 1;">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="saveCategoryBtn" style="flex: 2;">
+                            <span id="saveCategoryBtnText">Save Category</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API URL
+        const API_URL = "https://script.google.com/macros/s/AKfycbyeN9cS753aI9oP1wZa-mnWB5tM_2rrpqxRX2MF1G4FxZRutA6MFb-THzZIs-dLu11P/exec";
+        
+        // Global variables
+        let currentSection = 'dashboard';
+        let currentProductsPage = 1;
+        let currentOrdersPage = 1;
+        let currentUsersPage = 1;
+        let productsPerPage = 10;
+        let ordersPerPage = 10;
+        let usersPerPage = 10;
+        let allProducts = [];
+        let allOrders = [];
+        let allUsers = [];
+        let allCategories = [];
+
+        // Initialize admin dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAuthenticated = localStorage.getItem('adminAuth');
+            const adminUsername = localStorage.getItem('adminUsername');
+            
+            if (!isAuthenticated || !adminUsername) {
+                window.location.href = "admin-login.html";
+                return;
+            }
+            
+            // Set admin name and avatar
+            document.getElementById('adminName').textContent = adminUsername;
+            document.getElementById('adminAvatar').textContent = adminUsername.charAt(0).toUpperCase();
+            
+            // Initialize event listeners
+            setupEventListeners();
+            
+            // Load initial data
+            loadDashboardStats();
+            loadProducts();
+            loadOrders();
+            loadUsers();
+            loadCategories();
+        });
+        
+        function setupEventListeners() {
+            // Sidebar navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const section = this.dataset.section;
+                    loadSection(section);
+                });
+            });
+            
+            // Mobile menu
+            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('active');
+            });
+            
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            
+            // Refresh button
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                loadDashboardStats();
+                loadProducts();
+                loadOrders();
+                loadUsers();
+                loadCategories();
+            });
+            
+            // Product search
+            document.getElementById('productSearch').addEventListener('input', filterProducts);
+            document.getElementById('categoryFilter').addEventListener('change', filterProducts);
+            document.getElementById('stockFilter').addEventListener('change', filterProducts);
+            
+            // Order search
+            document.getElementById('orderSearch').addEventListener('input', filterOrders);
+            document.getElementById('orderDate').addEventListener('change', filterOrders);
+            
+            // User search
+            document.getElementById('userSearch').addEventListener('input', filterUsers);
+            document.getElementById('userDate').addEventListener('change', filterUsers);
+            
+            // Order tabs
+            document.querySelectorAll('[data-tab]').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    switchTab(tabId);
+                });
+            });
+            
+            // Pagination
+            document.getElementById('prevPage').addEventListener('click', () => changePage(-1));
+            document.getElementById('nextPage').addEventListener('click', () => changePage(1));
+            document.getElementById('ordersPrevPage').addEventListener('click', () => changeOrdersPage(-1));
+            document.getElementById('ordersNextPage').addEventListener('click', () => changeOrdersPage(1));
+            document.getElementById('usersPrevPage').addEventListener('click', () => changeUsersPage(-1));
+            document.getElementById('usersNextPage').addEventListener('click', () => changeUsersPage(1));
+            
+            // Add product button
+            document.getElementById('addProductBtn').addEventListener('click', openAddProductModal);
+            document.getElementById('addCategoryBtn').addEventListener('click', openAddCategoryModal);
+            
+            // Modal close buttons
+            document.getElementById('closeProductModal').addEventListener('click', () => closeModal('addProductModal'));
+            document.getElementById('closeEditProductModal').addEventListener('click', () => closeModal('editProductModal'));
+            document.getElementById('closeOrderDetailsModal').addEventListener('click', () => closeModal('orderDetailsModal'));
+            document.getElementById('closeUserDetailsModal').addEventListener('click', () => closeModal('userDetailsModal'));
+            document.getElementById('closeCategoryModal').addEventListener('click', () => closeModal('addCategoryModal'));
+            
+            // Cancel buttons
+            document.getElementById('cancelAddProduct').addEventListener('click', () => closeModal('addProductModal'));
+            document.getElementById('cancelAddCategory').addEventListener('click', () => closeModal('addCategoryModal'));
+            
+            // Form submissions
+            document.getElementById('addProductForm').addEventListener('submit', saveProduct);
+            document.getElementById('addCategoryForm').addEventListener('submit', saveCategory);
+            document.getElementById('saveSettings').addEventListener('click', saveSettings);
+            
+            // Close modals on overlay click
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Analytics period change
+            document.getElementById('analyticsPeriod').addEventListener('change', loadAnalytics);
+        }
+        
+        function loadSection(section) {
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.section === section);
+            });
+            
+            // Update active section
+            document.querySelectorAll('.dashboard-section').forEach(sec => {
+                sec.classList.toggle('active', sec.id === `${section}Section`);
+            });
+            
+            currentSection = section;
+            
+            // Load section-specific data
+            switch(section) {
+                case 'dashboard':
+                    loadDashboardStats();
+                    break;
+                case 'products':
+                    loadProducts();
+                    break;
+                case 'orders':
+                    loadOrders();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'categories':
+                    loadCategories();
+                    break;
+                case 'analytics':
+                    loadAnalytics();
+                    break;
+            }
+            
+            // Close mobile menu if open
+            document.getElementById('sidebar').classList.remove('active');
+        }
+        
+        function switchTab(tabId) {
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabId);
+            });
+            
+            // Update active tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === `${tabId}Tab`);
+            });
+            
+            // Reload data based on tab
+            if (currentSection === 'orders') {
+                filterOrders();
+            } else if (currentSection === 'users') {
+                filterUsers();
+            }
+        }
+        
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch(`${API_URL}?action=getDashboardStats`);
+                const data = await response.json();
+                
+                if (data.status === "success") {
+                    const stats = data.stats;
+                    
+                    // Update stats cards
+                    document.getElementById('totalProducts').textContent = stats.totalProducts;
+                    document.getElementById('totalOrders').textContent = stats.totalOrders;
+                    document.getElementById('totalUsers').textContent = stats.totalUsers;
+                    document.getElementById('totalRevenue').textContent = '₹' + stats.totalRevenue.toLocaleString('en-IN');
+                    
+                    // Update badges
+                    document.getElementById('productsBadge').textContent = stats.totalProducts;
+                    document.getElementById('ordersBadge').textContent = stats.totalOrders;
+                    document.getElementById('usersBadge').textContent = stats.totalUsers;
+                    
+                    // Load recent orders
+                    await loadRecentOrders();
+                    
+                    // Load low stock products
+                    await loadLowStockProducts();
+                }
+            } catch (error) {
+                console.error("Error loading dashboard stats:", error);
+            }
+        }
+        
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}?action=getProducts`);
+                const data = await response.json();
+                
+                if (data.status === "success") {
+                    allProducts = data.products;
+                    
+                    // Update categories filter
+                    updateCategoriesFilter(data.products);
+                    
+                    // Display products
+                    displayProducts();
+                    
+                    // Update stats
+                    document.getElementById('totalProducts').textContent = data.products.length;
+                }
+            } catch (error) {
+                console.error("Error loading products:", error);
+            }
+        }
+        
+        function displayProducts() {
+            const tableBody = document.getElementById('productsTableBody');
+            const filteredProducts = getFilteredProducts();
+            const startIndex = (currentProductsPage - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const pageProducts = filteredProducts.slice(startIndex, endIndex);
+            
+            if (pageProducts.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #b0b0b0;">
+                            <i class="fas fa-box-open" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
+                            <p>No products found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            
+            pageProducts.forEach(product => {
+                const stockClass = product.stock <= 5 ? 'status-pending' : 'status-active';
+                const stockText = product.stock <= 5 ? 'Low' : 'In Stock';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="image-preview">
+                            ${product.image ? `<img src="${product.image}" alt="${product.name}">` : '<span>No Image</span>'}
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 600;">${product.name}</div>
+                        <div style="font-size: 12px; color: #b0b0b0; margin-top: 5px;">ID: ${product.id}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight: bold; color: #10b981;">₹${product.finalPrice.toLocaleString('en-IN')}</div>
+                        ${product.discount > 0 ? 
+                            `<div style="font-size: 12px; color: #888; text-decoration: line-through;">₹${product.price.toLocaleString('en-IN')}</div>` : ''}
+                    </td>
+                    <td>
+                        <span class="status-badge ${stockClass}">${stockText} (${product.stock})</span>
+                    </td>
+                    <td>${product.category || 'Uncategorized'}</td>
+                    <td>
+                        <span class="status-badge ${product.featured ? 'status-active' : 'status-pending'}">
+                            ${product.featured ? 'Yes' : 'No'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-secondary btn-sm" onclick="editProduct(${product.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            updatePagination(filteredProducts.length, productsPerPage, 'products');
+        }
+        
+        function getFilteredProducts() {
+            let filtered = [...allProducts];
+            
+            // Search filter
+            const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.description?.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Category filter
+            const category = document.getElementById('categoryFilter').value;
+            if (category) {
+                filtered = filtered.filter(product => product.category === category);
+            }
+            
+            // Stock filter
+            const stockFilter = document.getElementById('stockFilter').value;
+            if (stockFilter === 'low') {
+                filtered = filtered.filter(product => product.stock <= 10);
+            } else if (stockFilter === 'out') {
+                filtered = filtered.filter(product => product.stock === 0);
+            }
+            
+            return filtered;
+        }
+        
+        function filterProducts() {
+            currentProductsPage = 1;
+            displayProducts();
+        }
+        
+        function updateCategoriesFilter(products) {
+            const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
+            const select = document.getElementById('categoryFilter');
+            const categorySelect = document.getElementById('productCategory');
+            
+            // Clear existing options except first one
+            while (select.options.length > 1) select.remove(1);
+            while (categorySelect.options.length > 1) categorySelect.remove(1);
+            
+            // Add category options
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                select.appendChild(option.cloneNode(true));
+                categorySelect.appendChild(option);
+            });
+        }
+        
+        async function loadRecentOrders() {
+            try {
+                const response = await fetch(`${API_URL}?action=getAllOrders`);
+                const data = await response.json();
+                
+                if (data.status === "success") {
+                    const recentOrders = data.orders.slice(0, 5);
+                    const tableBody = document.getElementById('recentOrdersBody');
+                    
+                    if (recentOrders.length === 0) {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 40px; color: #b0b0b0;">
+                                    <p>No recent orders</p>
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    tableBody.innerHTML = '';
+                    
+                    recentOrders.forEach(order => {
+                        const statusClass = `status-${order.status.toLowerCase()}`;
+                        const orderDate = new Date(order.orderDate).toLocaleDateString('en-IN');
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td style="font-weight: 600; color: var(--accent-color);">${order.orderId}</td>
+                            <td>
+                                <div>${order.userName}</div>
+                                <div style="font-size: 12px; color: #b0b0b0;">${order.userEmail}</div>
+                            </td>
+                            <td>₹${order.totalAmount.toLocaleString('en-IN')}</td>
+                            <td><span class="status-badge ${statusClass}">${order.status}</span></td>
+                            <td>${orderDate}</td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm" onclick="viewOrderDetails('${order.orderId}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading recent orders:", error);
+            }
+        }
+        
+        async function loadLowStockProducts() {
+            const lowStockProducts = allProducts.filter(product => product.stock <= 5);
+            const tableBody = document.getElementById('lowStockBody');
+            
+            if (lowStockProducts.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #b0b0b0;">
+                            <p>No low stock products</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            
+            lowStockProducts.slice(0, 5).forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td><span class="status-badge status-pending">${product.stock} left</span></td>
+                    <td>₹${product.finalPrice.toLocaleString('en-IN')}</td>
+                    <td>${product.category || 'Uncategorized'}</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" onclick="editProduct(${product.id})">
+                            <i class="fas fa-edit"></i> Restock
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_URL}?action=getAllOrders`);
+                const data = await response.json();
+                
+                if (data.status === "success") {
+                    allOrders = data.orders;
+                    displayOrders();
+                    document.getElementById('totalOrders').textContent = data.orders.length;
+                }
+            } catch (error) {
+                console.error("Error loading orders:", error);
+            }
+        }
+        
+        function displayOrders() {
+            const tableBody = document.getElementById('ordersTableBody');
+            const filteredOrders = getFilteredOrders();
+            const startIndex = (currentOrdersPage - 1) * ordersPerPage;
+            const endIndex = startIndex + ordersPerPage;
+            const pageOrders = filteredOrders.slice(startIndex, endIndex);
+            
+            if (pageOrders.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #b0b0b0;">
+                            <p>No orders found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            
+            pageOrders.forEach(order => {
+                const statusClass = `status-${order.status.toLowerCase()}`;
+                const orderDate = new Date(order.orderDate).toLocaleDateString('en-IN');
+                const itemCount = order.items.reduce((total, item) => total + item.quantity, 0);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="font-weight: 600; color: var(--accent-color);">${order.orderId}</td>
+                    <td>
+                        <div>${order.userName}</div>
+                        <div style="font-size: 12px; color: #b0b0b0;">${order.userEmail}</div>
+                    </td>
+                    <td>${itemCount} items</td>
+                    <td>₹${order.totalAmount.toLocaleString('en-IN')}</td>
+                    <td><span class="status-badge ${statusClass}">${order.status}</span></td>
+                    <td>${orderDate}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-secondary btn-sm" onclick="viewOrderDetails('${order.orderId}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="updateOrderStatus('${order.orderId}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            updatePagination(filteredOrders.length, ordersPerPage, 'orders');
+        }
+        
+        function getFilteredOrders() {
+            let filtered = [...allOrders];
+            
+            // Get active tab
+            const activeTab = document.querySelector('.tab.active').dataset.tab;
+            
+            // Filter by status based on tab
+            if (activeTab !== 'all') {
+                filtered = filtered.filter(order => order.status.toLowerCase() === activeTab);
+            }
+            
+            // Search filter
+            const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(order => 
+                    order.orderId.toLowerCase().includes(searchTerm) ||
+                    order.userName.toLowerCase().includes(searchTerm) ||
+                    order.userEmail.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Date filter
+            const dateFilter = document.getElementById('orderDate').value;
+            if (dateFilter) {
+                const filterDate = new Date(dateFilter).toDateString();
+                filtered = filtered.filter(order => 
+                    new Date(order.orderDate).toDateString() === filterDate
+                );
+            }
+            
+            // Sort by date (newest first)
+            filtered.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+            
+            return filtered;
+        }
+        
+        function filterOrders() {
+            currentOrdersPage = 1;
+            displayOrders();
+        }
+        
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_URL}?action=getAllUsers`);
+                const data = await response.json();
+                
+                if (data.status === "success") {
+                    allUsers = data.users;
+                    displayUsers();
+                    document.getElementById('totalUsers').textContent = data.users.length;
+                }
+            } catch (error) {
+                console.error("Error loading users:", error);
+            }
+        }
+        
+        function displayUsers() {
+            const tableBody = document.getElementById('usersTableBody');
+            const filteredUsers = getFilteredUsers();
+            const startIndex = (currentUsersPage - 1) * usersPerPage;
+            const endIndex = startIndex + usersPerPage;
+            const pageUsers = filteredUsers.slice(startIndex, endIndex);
+            
+            if (pageUsers.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #b0b0b0;">
+                            <p>No users found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            
+            pageUsers.forEach(user => {
+                const statusClass = user.status === 'active' ? 'status-active' : 'status-blocked';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="font-weight: 600; color: var(--accent-color);">${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phone}</td>
+                    <td>${user.totalOrders || 0}</td>
+                    <td>₹${(user.totalSpent || 0).toLocaleString('en-IN')}</td>
+                    <td><span class="status-badge ${statusClass}">${user.status}</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-secondary btn-sm" onclick="viewUserDetails('${user.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn ${user.status === 'active' ? 'btn-danger' : 'btn-success'} btn-sm" 
+                                    onclick="toggleUserStatus('${user.id}', '${user.status}')">
+                                <i class="fas ${user.status === 'active' ? 'fa-ban' : 'fa-check'}"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            updatePagination(filteredUsers.length, usersPerPage, 'users');
+        }
+        
+        function getFilteredUsers() {
+            let filtered = [...allUsers];
+            
+            // Get active tab
+            const activeTab = document.querySelector('.tab.active').dataset.tab;
+            
+            // Filter by status based on tab
+            if (activeTab === 'active') {
+                filtered = filtered.filter(user => user.status === 'active');
+            } else if (activeTab === 'blocked') {
+                filtered = filtered.filter(user => user.status === 'blocked');
+            }
+            
+            // Search filter
+            const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(user => 
+                    user.name.toLowerCase().includes(searchTerm) ||
+                    user.email.toLowerCase().includes(searchTerm) ||
+                    user.phone.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Date filter
+            const dateFilter = document.getElementById('userDate').value;
+            if (dateFilter) {
+                const filterDate = new Date(dateFilter).toDateString();
+                filtered = filtered.filter(user => 
+                    new Date(user.createdAt).toDateString() === filterDate
+                );
+            }
+            
+            return filtered;
+        }
+        
+        function filterUsers() {
+            currentUsersPage = 1;
+            displayUsers();
+        }
+        
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_URL}?action=getCategories`);
+                const data = await response.json();
+                
+                if (data.status === "success") {
+                    allCategories = data.categories;
+                    displayCategories();
+                }
+            } catch (error) {
+                console.error("Error loading categories:", error);
+            }
+        }
+        
+        function displayCategories() {
+            const tableBody = document.getElementById('categoriesTableBody');
+            
+            if (allCategories.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 40px; color: #b0b0b0;">
+                            <p>No categories found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            
+            allCategories.forEach(category => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div style="font-weight: 600;">${category.name}</div>
+                    </td>
+                    <td>${category.description || 'No description'}</td>
+                    <td>${category.productCount || 0} products</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-secondary btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        async function loadAnalytics() {
+            // For now, show placeholder
+            // In a real implementation, you would fetch analytics data from the API
+            document.getElementById('salesCount').textContent = '125';
+            document.getElementById('revenueCount').textContent = '₹1,25,000';
+            document.getElementById('newUsersCount').textContent = '45';
+            document.getElementById('conversionRate').textContent = '3.2%';
+        }
+        
+        function openAddProductModal() {
+            document.getElementById('addProductModal').classList.add('active');
+        }
+        
+        function openAddCategoryModal() {
+            document.getElementById('addCategoryModal').classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        async function saveProduct(e) {
+            e.preventDefault();
+            
+            const productData = {
+                name: document.getElementById('productName').value,
+                price: document.getElementById('productPrice').value,
+                discount: document.getElementById('productDiscount').value,
+                category: document.getElementById('productCategory').value,
+                stock: document.getElementById('productStock').value,
+                image: document.getElementById('productImage').value,
+                description: document.getElementById('productDescription').value,
+                featured: document.getElementById('productFeatured').value,
+                sku: document.getElementById('productSKU').value
+            };
+            
+            // Validation
+            if (!productData.name || !productData.price || !productData.category) {
+                showError("Please fill in all required fields");
+                return;
+            }
+            
+            const saveBtn = document.getElementById('saveProductBtn');
+            const saveBtnText = document.getElementById('saveProductBtnText');
+            
+            // Show loading
+            saveBtn.disabled = true;
+            saveBtnText.innerHTML = '<div class="loader"></div>';
+            
+            try {
+                const params = new URLSearchParams(productData);
+                const response = await fetch(`${API_URL}?action=addProduct&${params}`);
+                const data = await response.json();
+                
+                if (data.status === "success") {
+                    showSuccess("Product added successfully!");
+                    closeModal('addProductModal');
+                    loadProducts();
+                    loadDashboardStats();
+                } else {
+                    showError(data.message || "Failed to add product");
+                }
+            } catch (error) {
+                console.error("Error adding product:", error);
+                showError("Network error. Please try again.");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtnText.textContent = 'Save Product';
+            }
+        }
+        
+        async function saveCategory(e) {
+            e.preventDefault();
+            
+            const categoryData = {
+                name: document.getElementById('categoryName').value,
+                description: document.getElementById('categoryDescription').value
+            };
+            
+            if (!categoryData.name) {
+                showError("Category name is required");
+                return;
+            }
+            
+            const saveBtn = document.getElementById('saveCategoryBtn');
+            const saveBtnText = document.getElementById('saveCategoryBtnText');
+            
+            // Show loading
+            saveBtn.disabled = true;
+            saveBtnText.innerHTML = '<div class="loader"></div>';
+            
+            try {
+                // For now, just show success
+                // In a real implementation, you would save to the API
+                setTimeout(() => {
+                    showSuccess("Category added successfully!");
+                    closeModal('addCategoryModal');
+                    loadCategories();
+                }, 1000);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtnText.textContent = 'Save Category';
+            }
+        }
+        
+        async function editProduct(productId) {
+            const product = allProducts.find(p => p.id == productId);
+            if (!product) return;
+            
+            const modal = document.getElementById('editProductModal');
+            const modalBody = modal.querySelector('.modal-body');
+            
+            modalBody.innerHTML = `
+                <form id="editProductForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Product Name *</label>
+                            <input type="text" class="form-control" id="editProductName" value="${product.name}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select class="form-control" id="editProductCategory" required>
+                                <option value="">Select Category</option>
+                                ${allCategories.map(cat => 
+                                    `<option value="${cat.name}" ${cat.name === product.category ? 'selected' : ''}>${cat.name}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price (₹) *</label>
+                            <input type="number" class="form-control" id="editProductPrice" value="${product.price}" required min="1">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Discount (%)</label>
+                            <input type="number" class="form-control" id="editProductDiscount" value="${product.discount}" min="0" max="100">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Stock Quantity *</label>
+                            <input type="number" class="form-control" id="editProductStock" value="${product.stock}" required min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Featured Product</label>
+                            <select class="form-control" id="editProductFeatured">
+                                <option value="false" ${!product.featured ? 'selected' : ''}>No</option>
+                                <option value="true" ${product.featured ? 'selected' : ''}>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="text" class="form-control" id="editProductImage" value="${product.image || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="editProductDescription" rows="4">${product.description || ''}</textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 30px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('editProductModal')" style="flex: 1;">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="updateProductBtn" style="flex: 2;">
+                            Update Product
+                        </button>
+                    </div>
+                </form>
+            `;
+            
+            modal.classList.add('active');
+            
+            // Add form submit handler
+            modalBody.querySelector('#editProductForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const updateData = {
+                    id: productId,
+                    name: document.getElementById('editProductName').value,
+                    price: document.getElementById('editProductPrice').value,
+                    discount: document.getElementById('editProductDiscount').value,
+                    category: document.getElementById('editProductCategory').value,
+                    stock: document.getElementById('editProductStock').value,
+                    image: document.getElementById('editProductImage').value,
+                    description: document.getElementById('editProductDescription').value,
+                    featured: document.getElementById('editProductFeatured').value
+                };
+                
+                const updateBtn = document.getElementById('updateProductBtn');
+                updateBtn.disabled = true;
+                updateBtn.innerHTML = '<div class="loader"></div>';
+                
+                try {
+                    const params = new URLSearchParams(updateData);
+                    const response = await fetch(`${API_URL}?action=updateProduct&${params}`);
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        showSuccess("Product updated successfully!");
+                        closeModal('editProductModal');
+                        loadProducts();
+                        loadDashboardStats();
+                    } else {
+                        showError(data.message || "Failed to update product");
+                    }
+                } catch (error) {
+                    console.error("Error updating product:", error);
+                    showError("Network error. Please try again.");
+                } finally {
+                    updateBtn.disabled = false;
+                    updateBtn.textContent = 'Update Product';
+                }
+            });
+        }
+        
+        async function deleteProduct(productId) {
+            Swal.fire({
+                title: 'Delete Product?',
+                text: 'Are you sure you want to delete this product? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#667eea',
+                confirmButtonText: 'Yes, delete it!',
+                background: '#1e1e1e',
+                color: 'white'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const response = await fetch(`${API_URL}?action=deleteProduct&id=${productId}`);
+                        const data = await response.json();
+                        
+                        if (data.status === "success") {
+                            showSuccess("Product deleted successfully!");
+                            loadProducts();
+                            loadDashboardStats();
+                        } else {
+                            showError(data.message || "Failed to delete product");
+                        }
+                    } catch (error) {
+                        console.error("Error deleting product:", error);
+                        showError("Network error. Please try again.");
+                    }
+                }
+            });
+        }
+        
+        async function viewOrderDetails(orderId) {
+            const order = allOrders.find(o => o.orderId === orderId);
+            if (!order) return;
+            
+            const modal = document.getElementById('orderDetailsModal');
+            const modalBody = modal.querySelector('.modal-body');
+            
+            const orderDate = new Date(order.orderDate).toLocaleString('en-IN');
+            const itemsList = order.items.map(item => `
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                    <div>
+                        <div style="font-weight: 500;">${item.name}</div>
+                        <div style="font-size: 14px; color: #b0b0b0;">Qty: ${item.quantity} × ₹${item.price.toLocaleString('en-IN')}</div>
+                    </div>
+                    <div style="font-weight: bold;">₹${item.total.toLocaleString('en-IN')}</div>
+                </div>
+            `).join('');
+            
+            modalBody.innerHTML = `
+                <div>
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h4 style="color: var(--accent-color);">${order.orderId}</h4>
+                            <span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span>
+                        </div>
+                        <div style="font-size: 14px; color: #b0b0b0;">Order Date: ${orderDate}</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="margin-bottom: 10px; color: #d1d1d1;">Customer Details</h5>
+                        <div style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 8px;">
+                            <div style="margin-bottom: 8px;"><strong>Name:</strong> ${order.userName}</div>
+                            <div style="margin-bottom: 8px;"><strong>Email:</strong> ${order.userEmail}</div>
+                            <div style="margin-bottom: 8px;"><strong>Phone:</strong> ${order.userPhone}</div>
+                            <div><strong>Address:</strong> ${order.userAddress}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="margin-bottom: 10px; color: #d1d1d1;">Order Items</h5>
+                        <div style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 8px;">
+                            ${itemsList}
+                            <div style="display: flex; justify-content: space-between; padding-top: 15px; margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 18px; font-weight: bold; color: #10b981;">
+                                <span>Total Amount:</span>
+                                <span>₹${order.totalAmount.toLocaleString('en-IN')}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="margin-bottom: 10px; color: #d1d1d1;">Order Status</h5>
+                        <select class="form-control" id="orderStatusSelect">
+                            <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                            <option value="Completed" ${order.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                            <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px;">
+                        <button class="btn btn-secondary" onclick="closeModal('orderDetailsModal')" style="flex: 1;">
+                            Close
+                        </button>
+                        <button class="btn btn-primary" onclick="updateOrderStatus('${order.orderId}', document.getElementById('orderStatusSelect').value)" style="flex: 2;">
+                            Update Status
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+        
+        async function updateOrderStatus(orderId, newStatus = null) {
+            if (!newStatus) {
+                newStatus = prompt("Enter new status (Pending, Processing, Completed, Cancelled):");
+                if (!newStatus) return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}?action=updateOrderStatus&orderId=${orderId}&newStatus=${newStatus}`);
+                const data = await response.json();
+                
+                if (data.status === "success") {
+                    showSuccess(`Order ${orderId} status updated to ${newStatus}`);
+                    closeModal('orderDetailsModal');
+                    loadOrders();
+                    loadDashboardStats();
+                } else {
+                    showError(data.message || "Failed to update order status");
+                }
+            } catch (error) {
+                console.error("Error updating order status:", error);
+                showError("Network error. Please try again.");
+            }
+        }
+        
+        async function viewUserDetails(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+            
+            const modal = document.getElementById('userDetailsModal');
+            const modalBody = modal.querySelector('.modal-body');
+            
+            const joinDate = new Date(user.createdAt).toLocaleDateString('en-IN');
+            const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleString('en-IN') : 'Never';
+            
+            modalBody.innerHTML = `
+                <div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: var(--accent-color); margin-bottom: 10px;">${user.name}</h4>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <span class="status-badge ${user.status === 'active' ? 'status-active' : 'status-blocked'}">
+                                ${user.status}
+                            </span>
+                            <span style="font-size: 14px; color: #b0b0b0;">ID: ${user.id}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="margin-bottom: 10px; color: #d1d1d1;">Contact Information</h5>
+                        <div style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 8px;">
+                            <div style="margin-bottom: 8px;"><strong>Email:</strong> ${user.email}</div>
+                            <div style="margin-bottom: 8px;"><strong>Phone:</strong> ${user.phone}</div>
+                            <div><strong>Address:</strong> ${user.address}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="margin-bottom: 10px; color: #d1d1d1;">Account Information</h5>
+                        <div style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 8px;">
+                            <div style="margin-bottom: 8px;"><strong>Joined:</strong> ${joinDate}</div>
+                            <div style="margin-bottom: 8px;"><strong>Last Login:</strong> ${lastLogin}</div>
+                            <div style="margin-bottom: 8px;"><strong>Total Orders:</strong> ${user.totalOrders || 0}</div>
+                            <div><strong>Total Spent:</strong> ₹${(user.totalSpent || 0).toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px;">
+                        <button class="btn btn-secondary" onclick="closeModal('userDetailsModal')" style="flex: 1;">
+                            Close
+                        </button>
+                        <button class="btn ${user.status === 'active' ? 'btn-danger' : 'btn-success'}" 
+                                onclick="toggleUserStatus('${user.id}', '${user.status}')" style="flex: 2;">
+                            <i class="fas ${user.status === 'active' ? 'fa-ban' : 'fa-check'}"></i>
+                            ${user.status === 'active' ? 'Block User' : 'Unblock User'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+        
+        async function toggleUserStatus(userId, currentStatus) {
+            const newStatus = currentStatus === 'active' ? 'blocked' : 'active';
+            const action = currentStatus === 'active' ? 'block' : 'unblock';
+            
+            Swal.fire({
+                title: `${action.charAt(0).toUpperCase() + action.slice(1)} User?`,
+                text: `Are you sure you want to ${action} this user?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: currentStatus === 'active' ? '#ef4444' : '#10b981',
+                cancelButtonColor: '#667eea',
+                confirmButtonText: `Yes, ${action} user!`,
+                background: '#1e1e1e',
+                color: 'white'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const response = await fetch(`${API_URL}?action=updateUserStatus&userId=${userId}&status=${newStatus}`);
+                        const data = await response.json();
+                        
+                        if (data.status === "success") {
+                            showSuccess(`User ${action}ed successfully!`);
+                            closeModal('userDetailsModal');
+                            loadUsers();
+                            loadDashboardStats();
+                        } else {
+                            showError(data.message || `Failed to ${action} user`);
+                        }
+                    } catch (error) {
+                        console.error("Error updating user status:", error);
+                        showError("Network error. Please try again.");
+                    }
+                }
+            });
+        }
+        
+        function saveSettings() {
+            // In a real implementation, you would save settings to the API
+            showSuccess("Settings saved successfully!");
+        }
+        
+        function updatePagination(totalItems, itemsPerPage, type) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            
+            if (type === 'products') {
+                document.getElementById('pageInfo').textContent = `Page ${currentProductsPage} of ${totalPages}`;
+                document.getElementById('prevPage').disabled = currentProductsPage === 1;
+                document.getElementById('nextPage').disabled = currentProductsPage === totalPages || totalPages === 0;
+            } else if (type === 'orders') {
+                document.getElementById('ordersPageInfo').textContent = `Page ${currentOrdersPage} of ${totalPages}`;
+                document.getElementById('ordersPrevPage').disabled = currentOrdersPage === 1;
+                document.getElementById('ordersNextPage').disabled = currentOrdersPage === totalPages || totalPages === 0;
+            } else if (type === 'users') {
+                document.getElementById('usersPageInfo').textContent = `Page ${currentUsersPage} of ${totalPages}`;
+                document.getElementById('usersPrevPage').disabled = currentUsersPage === 1;
+                document.getElementById('usersNextPage').disabled = currentUsersPage === totalPages || totalPages === 0;
+            }
+        }
+        
+        function changePage(direction) {
+            const filteredProducts = getFilteredProducts();
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            
+            currentProductsPage += direction;
+            if (currentProductsPage < 1) currentProductsPage = 1;
+            if (currentProductsPage > totalPages) currentProductsPage = totalPages;
+            
+            displayProducts();
+        }
+        
+        function changeOrdersPage(direction) {
+            const filteredOrders = getFilteredOrders();
+            const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+            
+            currentOrdersPage += direction;
+            if (currentOrdersPage < 1) currentOrdersPage = 1;
+            if (currentOrdersPage > totalPages) currentOrdersPage = totalPages;
+            
+            displayOrders();
+        }
+        
+        function changeUsersPage(direction) {
+            const filteredUsers = getFilteredUsers();
+            const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+            
+            currentUsersPage += direction;
+            if (currentUsersPage < 1) currentUsersPage = 1;
+            if (currentUsersPage > totalPages) currentUsersPage = totalPages;
+            
+            displayUsers();
+        }
+        
+        function handleLogout() {
+            Swal.fire({
+                title: 'Logout?',
+                text: 'Are you sure you want to logout?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#667eea',
+                cancelButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, logout',
+                background: '#1e1e1e',
+                color: 'white'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem('adminAuth');
+                    localStorage.removeItem('adminUsername');
+                    window.location.href = "admin-login.html";
+                }
+            });
+        }
+        
+        function showError(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: message,
+                background: '#1e1e1e',
+                color: 'white',
+                confirmButtonColor: '#667eea'
+            });
+        }
+        
+        function showSuccess(message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: message,
+                background: '#1e1e1e',
+                color: 'white',
+                confirmButtonColor: '#10b981',
+                timer: 3000
+            });
+        }
+        
+        // Make functions available globally
+        window.loadSection = loadSection;
+        window.editProduct = editProduct;
+        window.deleteProduct = deleteProduct;
+        window.viewOrderDetails = viewOrderDetails;
+        window.updateOrderStatus = updateOrderStatus;
+        window.viewUserDetails = viewUserDetails;
+        window.toggleUserStatus = toggleUserStatus;
+        window.closeModal = closeModal;
+    </script>
+</body>
+</html>
